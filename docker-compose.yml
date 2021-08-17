@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+
+    ubuntu:
+        build:
+            context: ubuntu
+        volumes:
+            - ./project:/usr/share/nginx/html
+        working_dir: /usr/share/nginx/html
+        # "tail -F anything" for prevent container from exit
+        command: bash -c "service php7.2-fpm start && tail -F anything"
+
+    nginx:
+        build: 
+            context: nginx
+        volumes:
+            - ./project:/usr/share/nginx/html
+        ports:
+            - 8083:80
+        environment:
+            - NGINX_HOST=localhost
+        depends_on:
+            - ubuntu
